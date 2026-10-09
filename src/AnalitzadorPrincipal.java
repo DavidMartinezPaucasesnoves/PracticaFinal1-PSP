@@ -4,6 +4,7 @@ public class AnalitzadorPrincipal {
     public static void main(String[] args) {
         String textoPrueba = "akasn asirfasiurapoi ipasoi u0fajf ERROR airh afpas afpaejp f ERROR jasbf error";
         
+        
         try {
             ProcessBuilder pb = new ProcessBuilder("java", "-jar", "src\\FiltreLog.java");
             Process process = pb.start();

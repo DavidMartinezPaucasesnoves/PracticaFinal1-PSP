@@ -17,12 +17,16 @@ public class FiltreLog {
         }
         catch (IOException e) {
             IO.println(e.getMessage());
+            System.err.println("Error de lectura: " + e.getMessage());
+            System.exit(1);
         }
 
         if (!hayContenido) {
-            IO.println("Error: Texto Vacío.");
+            System.err.println("Error: Texto vacío.");
+            System.exit(1);
         }
         
         IO.println(contador);
+        System.exit(0);
     }
 }
