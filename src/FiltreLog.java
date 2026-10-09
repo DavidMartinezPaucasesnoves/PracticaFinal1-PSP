@@ -9,7 +9,7 @@ public class FiltreLog {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
             String linea;
             while ((linea = br.readLine()) != null) {
-                tieneContenido = true;
+                boolean tieneContenido = true;
                 if (linea.contains((palabraClave))){
                     contador++;
                 }
