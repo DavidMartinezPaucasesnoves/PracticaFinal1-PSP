@@ -2,7 +2,7 @@ import java.io.*;
 
 public class AnalitzadorPrincipal {
     public static void main(String[] args) {
-        String textoPrueba = "akasn asirfasiurapoi ipasoi u0fajf ERROR airh afpas afpaejp f ERROR jasbf error";
+        String textoPrueba = "akasn asirfasiurapoi WARNING ipasoi u0fajf ERROR airh WARNING afpas WARNING afpaejp f ERROR jasbf ERROR";
         File archivoErrores = new File("errors_filtre.log");
         
         try {
@@ -32,8 +32,16 @@ public class AnalitzadorPrincipal {
             
             int numWarnings = (resultadoWarningStr != null) ? Integer.parseInt(resultadoWarningStr.trim()) : 0;
 
+            int exitValueErr = processErr.exitValue();
+            int exitValueWar = processWar.exitValue();
+
+            int exitValueFinal = 0;
+
+            if (exitValueErr != 0 || exitValueWar != 0){
+                exitValueFinal = 1;
+            }
                 
-            System.out.println("Resultado: ERRORES = " + numErrores + ", WARNINGS = " + numWarnings);
+            System.out.println("RESULTAT: ERRORS=" + numErrores + " | WARNINGS=" + numWarnings + " | EXIT_CODE=" + exitValueFinal);
             
         } catch (Exception e) {
             System.err.println("Error en proceso principal: " + e.getMessage());
@@ -44,6 +52,7 @@ public class AnalitzadorPrincipal {
         try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()))) {
             bw.write(datos);
             bw.flush();
+            bw.close();
         }
     }
 
