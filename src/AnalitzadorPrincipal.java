@@ -6,26 +6,43 @@ public class AnalitzadorPrincipal {
         File archivoErrores = new File("errors_filtre.log");
         
         try {
-            ProcessBuilder pb = new ProcessBuilder("java", "-jar", "src\\FiltreLog.java");
-            pb.redirectError(archivoErrores);
-            Process process = pb.start();
+            ProcessBuilder pbe = new ProcessBuilder("java", "-jar", "src\\FiltreLog.java");
+            pbe.redirectError(archivoErrores);
+            Process processErr = pbe.start();
+            String resultadoErroresStr = leerSalidaProceso(processErr);
+            enviarDatosAlProceso(processErr, textoPrueba);
+            int exitCodeError = processErr.waitFor();
+            int numErrores = Integer.parseInt(resultadoErroresStr.trim());
 
-            try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()))){
-                bw.write(textoPrueba);
-                bw.flush();
-            }
 
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()))){
-                String resultadoErr = br.readLine();
-                IO.println("Lineas con ERROR encontradas: " + resultadoErr);
-            }
+            ProcessBuilder pbw = new ProcessBuilder("java", "-jar", "src\\FiltreLog.java", "WARNING");
+            pbw.redirectError(archivoErrores);
+            Process processWar = pbw.start();
+            String resultadoWarningStr = leerSalidaProceso(processWar);
+            enviarDatosAlProceso(processWar, textoPrueba);
+            int exitCodeWarning = processWar.waitFor();
+            int numWarnings = Integer.parseInt(resultadoWarningStr.trim());
 
-            int exitCode = process.waitFor();
-            System.out.println("Código de finalización del hijo: " + exitCode);
+                
+            System.out.println("Resultado: ERRORES = " + numErrores + ", WARNINGS = " + numWarnings);
             
         }
         catch (Exception e) {
-                IO.println(e.getMessage());
+                System.err.println("Error: " + e.getMessage());
+            }
+    }
+
+    private static void enviarDatosAlProceso(Process process, String datos) throws IOException {
+        try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()))){
+                bw.write(datos);
+                bw.flush();
+                bw.close();
+            }
+    }
+
+    private static String leerSalidaProceso(Process process) throws IOException {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()))){
+                return br.readLine();
             }
     }
 }
