@@ -2,7 +2,7 @@ import java.io.*;
 
 public class FiltreLog {
     public static void main(String[] args) {
-        String palabraClave = "ERROR";
+        String palabraClave = (args.length > 0) ? args[0] : "ERROR";
         int contador = 0;
         boolean hayContenido = false;
 
