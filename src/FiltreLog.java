@@ -9,14 +9,17 @@ public class FiltreLog {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
             String linea;
             while ((linea = br.readLine()) != null) {
-                boolean tieneContenido = true;
-                if (linea.contains((palabraClave))){
-                    contador++;
+                hayContenido = true;
+                
+
+                String[] palabras = linea.split("\\s+");
+                for (String palabra : palabras) {
+                    if (palabra.equals(palabraClave)) {
+                        contador++;
+                    }
                 }
             }
-        }
-        catch (IOException e) {
-            IO.println(e.getMessage());
+        } catch (IOException e) {
             System.err.println("Error de lectura: " + e.getMessage());
             System.exit(1);
         }
@@ -26,7 +29,7 @@ public class FiltreLog {
             System.exit(1);
         }
         
-        IO.println(contador);
+        System.out.println(contador);
         System.exit(0);
     }
 }
